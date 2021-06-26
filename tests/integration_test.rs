@@ -21,7 +21,7 @@ impl StyleStrategy for CustomStrategy {
         }
     }
     fn component_decider(&self, style: &SvgStyle, comp: &mut Commands) {
-        comp.with(if style.stroke_opacity().unwrap() == 1.0 {
+        comp.spawn().insert(if style.stroke_opacity().unwrap() == 1.0 {
             Collider::Solid
         } else {
             Collider::Scorable
@@ -37,7 +37,7 @@ impl Plugin for TestPlugin {
 }
 
 fn setup(
-    commands: &mut Commands,
+    commands: Commands,
     materials: ResMut<Assets<ColorMaterial>>,
     meshes: ResMut<Assets<Mesh>>,
 ) {
@@ -45,7 +45,7 @@ fn setup(
 }
 
 fn setup_custom(
-    commands: &mut Commands,
+    commands: Commands,
     materials: ResMut<Assets<ColorMaterial>>,
     meshes: ResMut<Assets<Mesh>>,
 ) {
@@ -53,7 +53,7 @@ fn setup_custom(
 }
 
 fn setup_whole_svg(
-    commands: &mut Commands,
+    commands: Commands,
     materials: ResMut<Assets<ColorMaterial>>,
     meshes: ResMut<Assets<Mesh>>,
 ) {
@@ -69,7 +69,7 @@ fn setup_whole_svg(
 }
 
 fn setup_with_shapes(
-    commands: &mut Commands,
+    commands: Commands,
     materials: ResMut<Assets<ColorMaterial>>,
     meshes: ResMut<Assets<Mesh>>,
 ) {

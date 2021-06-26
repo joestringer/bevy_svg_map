@@ -34,7 +34,7 @@ The library provides a function to be used inside a bevy's startup_system.
 Here, we are loading the file `ex.svg` under the `assets/` directory.
 
 ```rust
-use bevy_svg_map::load_svg_map;
+use bevy_svg_map::{load_svg_map, StyleStrategy};
 use bevy::prelude::*;
 
 // We need to provide a struct implementing the StyleStrategy
@@ -45,12 +45,13 @@ impl StyleStrategy for MyStrategy {}
 
 fn main() {
     App::build()
-          .add_default_plugins()
+          .add_plugins(DefaultPlugins)
           .add_startup_system(setup.system())
           .run();
 }
 
-fn setup(com: &mut Commands, mat: ResMut<Assets<ColorMaterial>>, mesh: ResMut<Assets<Mesh>>) {
+fn setup(com: Commands, mat: ResMut<Assets<ColorMaterial>>, mesh: ResMut<Assets<Mesh>>) {
+    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
     load_svg_map(com, mat, mesh, "assets/ex.svg", MyStrategy);
 }
 ```

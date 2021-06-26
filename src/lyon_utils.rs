@@ -31,7 +31,7 @@ impl From<Geometry> for Mesh {
     }
 }
 
-/// Returns a `SpriteComponents` bundle with the given [`Geometry`](Geometry)
+/// Returns a `SpriteBundle` with the given [`Geometry`](Geometry)
 /// and `ColorMaterial`.
 ///
 /// adapted from [bevy_prototype_lyon](https://github.com/Nilirad/bevy_prototype_lyon/blob/master/src/path.rs)
@@ -53,7 +53,7 @@ fn create_sprite(
     }
 }
 
-/// Stroke to bevy components.
+/// Stroke to bevy `SpriteBundle`.
 ///
 /// adapted from [bevy_prototype_lyon](https://github.com/Nilirad/bevy_prototype_lyon/blob/master/src/path.rs)
 pub fn stroke(
@@ -78,7 +78,7 @@ pub fn stroke(
     create_sprite(material, meshes, geometry, translation)
 }
 
-/// Fill to bevy components.
+/// Fill to bevy `SpriteBundle`.
 ///
 /// adapted from [bevy_prototype_lyon](https://github.com/Nilirad/bevy_prototype_lyon/blob/master/src/path.rs)
 pub fn fill(
