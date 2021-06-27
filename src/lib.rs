@@ -80,16 +80,12 @@ pub fn load_svg_map<T: StyleStrategy>(
 ) {
     // let wall_thickness = 10.0;
     let (x_max, y_max) = max_coords(svg_map);
-    let (x_max, y_max) = (x_max as f32, y_max as f32);
+    let (x_max, y_max) = (x_max as f32 / 2f32, y_max as f32 / 2f32);
 
     for StyleSegment { style, traces } in tokenize_svg(svg_map).unwrap().iter() {
         let color_handle = materials.add(strategy.color_decider(style).into());
-        // TODO: this transformation are a joke...
         let builder = lyon::path::Path::builder().with_svg().transformed(
-            Transform2D::translation(x_max + x_max / 2f32, y_max / 2f32) // translate to bevy coordinates
-                .pre_rotate(euclid::Angle::radians(std::f32::consts::PI / 2.)) // rotate 180º for some reason
-                .then(&Transform2D::new(0f32, 1f32, 1f32, 0f32, 0f32, 0f32)) // mirror for some reason
-                .then_translate(euclid::Vector2D::new(0., -y_max)), // translate again to bevy coordinates
+            Transform2D::scale(1., -1.), // Flip Y axis.
         );
         let path = build_path(builder, traces).unwrap();
         strategy.component_decider(
@@ -98,7 +94,7 @@ pub fn load_svg_map<T: StyleStrategy>(
                 path,
                 color_handle,
                 &mut meshes,
-                Vec3::new(-x_max, -y_max, 0.0),
+                Vec3::new(-x_max, y_max, 0.0),
                 &StrokeOptions::default()
                     .with_line_width(strategy.width_decider(style))
                     .with_line_cap(strategy.linecap_decider(style))
@@ -127,12 +123,9 @@ pub fn load_svg<'cmds>(
     let tr = Transform::from_translation(position.extend(0f32));
     let globe = GlobalTransform::from_translation(position.extend(0f32));
     let parent = commands.spawn_bundle((tr, globe)).id();
-    // TODO: this transformation are a joke...
     for StyleSegment { style, traces } in tokenize_svg(svg_map).unwrap().iter() {
         let builder = lyon::path::Path::builder().with_svg().transformed(
-            Transform2D::scale(scale_x, scale_y) // user scale
-                .pre_rotate(euclid::Angle::radians(std::f32::consts::PI / 2.)) // rotate 180º for some reason
-                .then(&Transform2D::new(0f32, 1f32, 1f32, 0f32, 0f32, 0f32)), // mirror for some reason
+            Transform2D::scale(scale_x, -scale_y), // Flip Y axis.
         );
         let path = build_path(builder, traces).unwrap();
         if matches!(style.stroke(), Some(_)) {
